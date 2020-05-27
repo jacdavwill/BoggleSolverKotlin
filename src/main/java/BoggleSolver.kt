@@ -20,9 +20,9 @@ class BoggleSolver(wordlistSource: String) {
         this.board = board
         row = sqrt(board.size.toDouble()).toInt()
 
-        val boardTriples = (board.indices).flatMap { first ->
-            adj(first).flatMap { second ->
-                adj(second).mapNotNull { third ->
+        val boardTriples = board.indices.flatMap { first ->
+            adj(first, row).flatMap { second ->
+                adj(second, row).mapNotNull { third ->
                     if (first != third) {
                         "${board[first]}${board[second]}${board[third]}" to listOf(first, second, third)
                     } else null
@@ -44,7 +44,7 @@ class BoggleSolver(wordlistSource: String) {
 
     private fun search(hist: MutableList<Int>, word: String): Boolean {
         val nextLet = word[hist.size]
-        adj(hist.last()).forEach { pos ->
+        adj(hist.last(), row).forEach { pos ->
             if (board[pos] == nextLet && !hist.contains(pos)) {
                 hist.add(pos)
                 if (hist.size == word.length) {
@@ -60,20 +60,6 @@ class BoggleSolver(wordlistSource: String) {
         }
         return false
     }
-
-    private fun adj(a: Int): List<Int> = when (val pos = a / row to a % row) {
-        0 to 0 -> listOf(a + 1, a + row, a + row + 1)
-        0 to row - 1 -> listOf(a - 1, a + row, a + row - 1)
-        row - 1 to 0 -> listOf(a + 1, a - row, a - row + 1)
-        row - 1 to row - 1 -> listOf(a - 1, a - row, a - row - 1)
-        else -> when {
-            pos.first == 0 -> listOf(a - 1, a + 1, a + row, a + row - 1, a + row + 1)
-            pos.first == row - 1 -> listOf(a - 1, a + 1, a - row, a - row - 1, a - row + 1)
-            pos.second == 0 -> listOf(a + row, a - row, a + row + 1, a + 1, a - row + 1)
-            pos.second == row - 1 -> listOf(a + row, a - row, a + row - 1, a - 1, a - row - 1)
-            else -> listOf(a + 1, a - 1, a + row, a + row - 1, a + row + 1, a - row, a - row - 1, a - row + 1)
-        }
-    }
 }
 
 @ExperimentalStdlibApi
@@ -81,9 +67,9 @@ fun main() {
 //    val time1 = System.currentTimeMillis()
     val solver = BoggleSolver("wordlist.txt")
 //    println(System.currentTimeMillis() - time1)
-//    val words = solver.solve("SERSPATGLINESERS".toLowerCase().toList())
+    val words = solver.solve("SERSPATGLINESERS".toLowerCase().toList()).forEach { println(it) }
 //    println(time(500) { solver.solve("SERSPATGLINESERS".toLowerCase().toList()) })
-    println(time(20_000) { solver.solve(List(16) { 'a' + (0 until 26).random() }) })
+//    println(time(20_000) { solver.solve(List(16) { 'a' + (0 until 26).random() }) })
 
 //    var best = 0
 ///    var counter = 0
@@ -99,22 +85,4 @@ fun main() {
 //        }
 //    }
 //    println("Best Score: $best with $counter iterations")
-}
-
-fun List<String>.getPoints() = this.groupBy { it.length }.map {
-    when (it.key) {
-        3, 4 -> 1
-        5 -> 2
-        6 -> 3
-        7 -> 5
-        else -> 11
-    } * it.value.size
-}.sum()
-
-fun time(times: Int = 1, func: () -> Any): Double {
-    val startTime = System.nanoTime()
-    (0 until times).forEach {
-        func()
-    }
-    return (System.nanoTime() - startTime) / times / 1_000_000.0
 }
