@@ -9,4 +9,4 @@ ms/board
 
 
 ----------- Trie ---------------------
-0.105  -> Original
+0.08  -> Original

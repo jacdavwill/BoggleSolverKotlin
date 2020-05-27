@@ -13,7 +13,7 @@ class BoggleTrie(wordlistSource: String) {
     private val baseNode = Node(null, '@')
     private var row = 0
     private var nodeCount = 1
-    private val found = mutableListOf<String>()
+    private val found = setOf<String>()
 
     init {
         File(wordlistSource).readLines().forEach { word ->
@@ -44,7 +44,7 @@ class BoggleTrie(wordlistSource: String) {
         row = sqrt(board.size.toDouble()).toInt()
 
         board.indices.forEach { search(mutableListOf(it), baseNode.childNodes[board[it]]!!) }
-        return found
+        return found.toList()
     }
 
     private fun search(hist: MutableList<Int>, node: Node) {
@@ -53,7 +53,7 @@ class BoggleTrie(wordlistSource: String) {
                 node.childNodes[board[pos]]?.also {
                     hist.add(pos)
                     if (it.isWord) {
-                        found.add(hist.toWord())
+                        found.plus(hist.toWord())
                     }
                     if (it.value > 0) {
                         search(hist, it)
@@ -72,9 +72,9 @@ fun main() {
     val time1 = System.currentTimeMillis()
     val solver = BoggleTrie("wordlist.txt")
     println(System.currentTimeMillis() - time1)
-//    val words = solver.solve("SERSPATGLINESERS".toLowerCase().toList()).distinct()
+//    val words = solver.solve("SERSPATGLINESERS".toLowerCase().toList())
 //    println(time(500) { solver.solve("SERSPATGLINESERS".toLowerCase().toList()) })
-    println(time(20_000) { solver.solve(List(16) { 'a' + (0 until 26).random() }) })
+    println(time(100_000) { solver.solve(List(16) { 'a' + (0 until 26).random() }) })
 
     var best = 0
 ///    var counter = 0
