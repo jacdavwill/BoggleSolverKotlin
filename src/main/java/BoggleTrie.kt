@@ -10,9 +10,8 @@ import kotlin.math.sqrt
 @ExperimentalStdlibApi
 class BoggleTrie(wordlistSource: String) {
     private lateinit var board: List<Char>
-    private val baseNode = Node(null, '@')
+    private val baseNode = Node()
     private var row = 0
-    private var nodeCount = 1
     private val found = setOf<String>()
 
     init {
@@ -21,21 +20,20 @@ class BoggleTrie(wordlistSource: String) {
                 var currNode = baseNode
                 word.forEach { letter ->
                     currNode.value++
-                    nodeCount++
                     currNode = currNode.childNodes[letter] ?: let {
-                        Node(currNode, letter).also {
+                        Node().also {
                             currNode.childNodes[letter] = it
                         }
                     }
                 }
-                currNode.isWord = true
+                currNode.word = word
             }
         }
     }
 
-    class Node(var parent: Node?, var letter: Char) {
+    class Node {
         var value = 0
-        var isWord = false
+        var word: String? = null
         val childNodes = HashMap<Char, Node?>()
     }
 
@@ -52,29 +50,31 @@ class BoggleTrie(wordlistSource: String) {
             if (!hist.contains(pos)) {
                 node.childNodes[board[pos]]?.also {
                     hist.add(pos)
-                    if (it.isWord) {
-                        found.plus(hist.toWord())
+                    it.word?.also { word ->
+                        found.plus(word)
                     }
                     if (it.value > 0) {
                         search(hist, it)
-                    }
+                    }C
                     hist.removeLast()
                 }
             }
         }
     }
-
-    private fun List<Int>.toWord(): String = map { board[it] }.joinToString(separator = "")
 }
 
 @ExperimentalStdlibApi
 fun main() {
-    val time1 = System.currentTimeMillis()
-    val solver = BoggleTrie("wordlist.txt")
-    println(System.currentTimeMillis() - time1)
-//    val words = solver.solve("SERSPATGLINESERS".toLowerCase().toList())
-//    println(time(500) { solver.solve("SERSPATGLINESERS".toLowerCase().toList()) })
-    println(time(100_000) { solver.solve(List(16) { 'a' + (0 until 26).random() }) })
+    val solver = time(message = "Preprocessing time") { BoggleTrie("wordlist.txt") }
+    solver.solve("SERSPATGLINESERS".toLowerCase().toList()).apply {
+        println(if (size == 1414 && getPoints() == 4527) {
+            "Valid: method status"
+        } else {
+            "There seems to be a problem: $size words with ${getPoints()} were found"
+        })
+    }
+//    time(500) { solver.solve("SERSPATGLINESERS".toLowerCase().toList()) }
+    time(100_000, "Avg time with 100,000") { solver.solve(List(16) { 'a' + (0 until 26).random() }) }
 
     var best = 0
 ///    var counter = 0

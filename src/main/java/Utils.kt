@@ -8,12 +8,14 @@ fun List<String>.getPoints() = this.groupBy { it.length }.map {
     } * it.value.size
 }.sum()
 
-fun time(times: Int = 1, func: () -> Any): Double {
+fun <T> time(times: Int = 1, message: String = "", func: () -> T): T {
     val startTime = System.nanoTime()
-    (0 until times).forEach {
-        func()
+    return func().apply {
+        (1 until times).forEach {
+            func()
+        }
+        println("$message: ${(System.nanoTime() - startTime) / times / 1_000_000.0}")
     }
-    return (System.nanoTime() - startTime) / times / 1_000_000.0
 }
 
 fun adj(a: Int, row: Int): List<Int> = when (val pos = a / row to a % row) {

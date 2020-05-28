@@ -64,12 +64,10 @@ class BoggleSolver(wordlistSource: String) {
 
 @ExperimentalStdlibApi
 fun main() {
-//    val time1 = System.currentTimeMillis()
-    val solver = BoggleSolver("wordlist.txt")
-//    println(System.currentTimeMillis() - time1)
+    val solver = time(message = "Preprocessing time") { BoggleTrie("wordlist.txt") }
     val words = solver.solve("SERSPATGLINESERS".toLowerCase().toList()).forEach { println(it) }
-//    println(time(500) { solver.solve("SERSPATGLINESERS".toLowerCase().toList()) })
-//    println(time(20_000) { solver.solve(List(16) { 'a' + (0 until 26).random() }) })
+//    time(500) { solver.solve("SERSPATGLINESERS".toLowerCase().toList()) }
+//    time(20_000) { solver.solve(List(16) { 'a' + (0 until 26).random() }) }
 
 //    var best = 0
 ///    var counter = 0
