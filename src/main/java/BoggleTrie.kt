@@ -16,7 +16,7 @@ class BoggleTrie(wordlistSource: String) {
 
     init {
         File(wordlistSource).readLines().forEach { word ->
-            if (word.length > 2) {
+            if (word.length in 3..15) {
                 var currNode = baseNode
                 word.forEach { letter ->
                     currNode.value++
@@ -55,7 +55,7 @@ class BoggleTrie(wordlistSource: String) {
                     }
                     if (it.value > 0) {
                         search(hist, it)
-                    }C
+                    }
                     hist.removeLast()
                 }
             }
@@ -66,15 +66,17 @@ class BoggleTrie(wordlistSource: String) {
 @ExperimentalStdlibApi
 fun main() {
     val solver = time(message = "Preprocessing time") { BoggleTrie("wordlist.txt") }
+
     solver.solve("SERSPATGLINESERS".toLowerCase().toList()).apply {
+        forEach { println(it) }
         println(if (size == 1414 && getPoints() == 4527) {
             "Valid: method status"
         } else {
-            "There seems to be a problem: $size words with ${getPoints()} were found"
+            "There seems to be a problem: $size words with ${getPoints()} points were found"
         })
     }
 //    time(500) { solver.solve("SERSPATGLINESERS".toLowerCase().toList()) }
-    time(100_000, "Avg time with 100,000") { solver.solve(List(16) { 'a' + (0 until 26).random() }) }
+//    time(100_000, "Avg time with 100,000") { solver.solve(List(16) { 'a' + (0 until 26).random() }) }
 
     var best = 0
 ///    var counter = 0
