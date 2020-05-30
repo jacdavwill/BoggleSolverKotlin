@@ -12,7 +12,7 @@ class BoggleTrie(wordlistSource: String) {
     private lateinit var board: List<Char>
     private val baseNode = Node()
     private var row = 0
-    private val found = setOf<String>()
+    private lateinit var found: MutableSet<String>
 
     init {
         File(wordlistSource).readLines().forEach { word ->
@@ -38,6 +38,7 @@ class BoggleTrie(wordlistSource: String) {
     }
 
     fun solve(board: List<Char>): List<String> {
+        this.found = mutableSetOf()
         this.board = board
         row = sqrt(board.size.toDouble()).toInt()
 
@@ -51,7 +52,7 @@ class BoggleTrie(wordlistSource: String) {
                 node.childNodes[board[pos]]?.also {
                     hist.add(pos)
                     it.word?.also { word ->
-                        found.plus(word)
+                        found.add(word)
                     }
                     if (it.value > 0) {
                         search(hist, it)
@@ -68,15 +69,15 @@ fun main() {
     val solver = time(message = "Preprocessing time") { BoggleTrie("wordlist.txt") }
 
     solver.solve("SERSPATGLINESERS".toLowerCase().toList()).apply {
-        forEach { println(it) }
+//        forEach { println(it) }
         println(if (size == 1414 && getPoints() == 4527) {
-            "Valid: method status"
+            "Method Status: VALID"
         } else {
             "There seems to be a problem: $size words with ${getPoints()} points were found"
         })
     }
-//    time(500) { solver.solve("SERSPATGLINESERS".toLowerCase().toList()) }
-//    time(100_000, "Avg time with 100,000") { solver.solve(List(16) { 'a' + (0 until 26).random() }) }
+    time(5_000, "Avg time with best board") { solver.solve("SERSPATGLINESERS".toLowerCase().toList()) }
+    time(200_000, "Avg time with random boards") { solver.solve(List(16) { 'a' + (0 until 26).random() }) }
 
     var best = 0
 ///    var counter = 0
