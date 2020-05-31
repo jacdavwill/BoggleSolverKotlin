@@ -12,3 +12,4 @@ ms/board
 0.08  -> Original
 0.063 -> Node holds word
 0.060 -> Found words stored in mutableSet
+0.050 -> Cache the adjacency list at the beginning
