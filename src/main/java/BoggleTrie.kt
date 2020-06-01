@@ -19,15 +19,6 @@ class BoggleTrie(wordlistSource: String) {
             listOf(4, 5, 9, 12, 13), listOf(4, 5, 6, 8, 10, 12, 13, 14), listOf(5, 6, 7, 9, 11, 13, 14, 15), listOf(6, 7, 10, 14, 15),
             listOf(8, 9, 13), listOf(8, 9, 10, 12, 14), listOf(9, 10, 11, 13, 15), listOf(10, 11, 14)
     )
-    var sum1: Long = 0
-    var sum2: Long = 0
-    var sum3: Long = 0
-    var sum4: Long = 0
-    var sum5: Long = 0
-    var sum6: Long = 0
-    var sum7: Long = 0
-    var count1 = 0
-    var time1: Long = 0
 
     init {
         File(wordlistSource).readLines().forEach { word ->
@@ -97,19 +88,4 @@ fun main() {
 //    }
 //    time(5_000, "Avg time with best board") { solver.solve("SERSPATGLINESERS".toLowerCase().toList()) }
     time(200_000, "Avg time with random boards") { solver.solve(List(16) { 'a' + (0 until 26).random() }) }
-
-//    var best = 0
-//    var counter = 0
-//    val time = System.currentTimeMillis()
-//    while (System.currentTimeMillis() - time < 60_000) {
-//        counter++
-//        val board = List(16) { 'a' + (0 until 26).random() }
-//        solver.solve(board).getPoints().also {
-//            if (it > best) {
-//                best = it
-//                println("(${it}) $board)")
-//            }
-//        }
-//    }
-//    println("Best Score: $best with $counter iterations")
 }
