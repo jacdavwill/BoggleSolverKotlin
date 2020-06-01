@@ -13,3 +13,4 @@ ms/board
 0.063 -> Node holds word
 0.060 -> Found words stored in mutableSet
 0.050 -> Cache the adjacency list at the beginning
+0.048 -> Hardcode the adjacency list for 4x4 board
