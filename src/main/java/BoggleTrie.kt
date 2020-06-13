@@ -98,5 +98,6 @@ fun main() {
 //        })
 //    }
 //    time(5_000, "Avg time with best board") { solver.solve("SERSPATGLINESERS".toLowerCase().toList()) }
-    time(200_000, "Avg time with random boards") { solver.solve(List(16) { 'a' + (0 until 26).random() }, true) }
+//    time(400_000, "Avg time with random boards") { solver.solve(List(16) { 'a' + (0 until 26).random() }, true) }
+    duration(message = "Boards in a minute") { solver.solve(List(16) { 'a' + (0 until 26).random() }, true) }
 }

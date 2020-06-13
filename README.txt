@@ -14,4 +14,4 @@ ms/board
 0.060 -> Found words stored in mutableSet
 0.050 -> Cache the adjacency list at the beginning
 0.048 -> Hardcode the adjacency list for 4x4 board
-0.042 -> Save history as list of bools rather than list of ints
+0.038 -> Save history as list of bools rather than list of ints

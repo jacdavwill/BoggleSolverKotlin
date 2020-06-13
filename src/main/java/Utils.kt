@@ -18,6 +18,17 @@ fun <T> time(times: Int = 1, message: String = "", func: () -> T): T {
     }
 }
 
+fun <T> duration(seconds: Int = 60, iterationsBetweenChecks: Int = 100, message: String = "", func: () -> T): Int {
+    val startTime = System.nanoTime()
+    var count = 0
+    while((System.nanoTime() - startTime) / 1_000_000_000 < seconds) {
+        (1..iterationsBetweenChecks).forEach {  func() }
+        count += iterationsBetweenChecks
+    }
+    println("$message: $count iterations, Avg ms per board: ${seconds.toDouble() * 1000 / count}")
+    return count
+}
+
 fun adj(a: Int, row: Int): List<Int> = when (val pos = a / row to a % row) {
     0 to 0 -> listOf(a + 1, a + row, a + row + 1)
     0 to row - 1 -> listOf(a - 1, a + row, a + row - 1)
